@@ -1,6 +1,5 @@
 <template>
   <v-container>
-    <Header />
     <AddTodo v-on:add-todo="addTodo"/>
     <div v-for="todo in todos" v-bind:key="todo.id">
         <Todo v-bind:todo="todo" v-on:del-todo="deleteTodo" v-on:update-todo="updateTodo(todo)"/>
@@ -10,7 +9,6 @@
 
 <script>
     import Todo from './Todo.vue'
-    import Header from './Header.vue'
     import AddTodo from './AddTodo.vue'
     import {APIService} from '../APIService'
     
@@ -23,7 +21,6 @@
         }),
         components: {
             Todo,
-            Header,
             AddTodo,
         },
         methods: {
