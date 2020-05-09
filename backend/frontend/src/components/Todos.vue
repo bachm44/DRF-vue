@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <AddTodo v-on:add-todo="addTodo"/>
-    <div v-for="todo in todos" v-bind:key="todo.id">
+    <AddTodo />
+    <div v-for="todo in allTodos" v-bind:key="todo.id">
         <Todo v-bind:todo="todo" v-on:del-todo="deleteTodo" v-on:update-todo="updateTodo(todo)"/>
     </div>
   </v-container>
@@ -10,12 +10,33 @@
 <script>
     import Todo from './Todo.vue'
     import AddTodo from './AddTodo.vue'
-    import {APIService} from '../APIService'
-    
-    const apiService = new APIService();
+    import { mapGetters, mapActions } from 'vuex'
     
     export default {
         name: "Todos",
+        data: () => ({
+        }),
+        methods: {
+            ...mapActions(['fetchTodos']),
+            updateTodo(todo) {},
+            deleteTodo(todo) {}
+
+        },
+        components: {
+            Todo,
+            AddTodo,
+        },
+        computed: mapGetters(['allTodos']),
+        created() {
+            this.fetchTodos()
+        }
+    }
+</script>
+
+
+
+<!--
+name: "Todos",
         data: () => ({
             todos: []
         }),
@@ -32,7 +53,6 @@
                 apiService.getTodos()
                 .then(resp => {
                     this.todos = resp.data
-                    console.log(this.todos)
                 })
                 .catch(err => console.log(err))
             },
@@ -49,6 +69,5 @@
         },
         created(){
             this.getTodos()
-        }
-    }
-</script>
+        },
+-->

@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <form @submit="addTodo">
+    <form @submit="onSubmit">
     <input type="text" v-model="todoText" placeholder="Add new todo...">
     <input type="submit" value="Submit">
     </form>
@@ -8,16 +8,18 @@
 </template>
 
 <script>
+    import { mapActions } from 'vuex'
+
     export default {
         name: 'AddTodo',
         data: () => ({
             todoText:'',
         }),
         methods: {
-            addTodo(e){
+            ...mapActions(['addTodo']),
+            onSubmit(e){
                 e.preventDefault()
-                const toAdd = {"text": this.todoText}
-                this.$emit('add-todo', toAdd)
+                this.addTodo(this.todoText)
                 this.todoText = ''
             }
         },
