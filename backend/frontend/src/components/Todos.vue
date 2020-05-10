@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <AddTodo />
-    <div v-for="todo in allTodos" v-bind:key="todo.id">
+    <div v-for="todo in allTodos.slice().reverse()" v-bind:key="todo.id">
         <Todo v-bind:todo="todo" v-on:del-todo="deleteTodo" v-on:update-todo="updateTodo(todo)"/>
     </div>
   </v-container>
@@ -20,7 +20,6 @@
             ...mapActions(['fetchTodos']),
             updateTodo(todo) {},
             deleteTodo(todo) {}
-
         },
         components: {
             Todo,
