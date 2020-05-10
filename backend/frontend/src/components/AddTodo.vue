@@ -19,6 +19,7 @@
 <script>
     import { mapActions } from 'vuex'
     import { required } from 'vuelidate/lib/validators'
+    
     export default {
         name: 'AddTodo',
         data: () => ({
