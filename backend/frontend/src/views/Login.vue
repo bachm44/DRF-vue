@@ -49,6 +49,8 @@
 
 <script>
 import { required } from "vuelidate/lib/validators";
+import { mapGetters, mapActions } from "vuex"
+import router from '../router/index.js'
 
 export default {
   name: "Login",
@@ -59,14 +61,27 @@ export default {
     showP1: false
   }),
   methods: {
+    ...mapGetters(["getCaptcha"]),
+    ...mapActions(["recaptchaValidate"]),
     onLogin(e) {
       this.submitted = true;
       this.$v.$touch();
       if (this.$v.$invalid) {
         return;
       } else {
-        //login logic
+        if (!this.recaptcha()) {
+          alert("Captcha failed");
+          return
+        }
+        alert("Captcha success");
+        router.push({ name: 'Home'})
       }
+    },
+    recaptcha() {
+      this.$recaptcha("login").then(token => {
+        this.recaptchaValidate(token);
+      });
+      return this.getCaptcha().success;
     }
   },
   validations: {

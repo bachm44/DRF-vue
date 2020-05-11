@@ -8,12 +8,16 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { dom } from '@fortawesome/fontawesome-svg-core'
+import { VueReCaptcha } from 'vue-recaptcha-v3'
 
 library.add(fas)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 dom.watch()
 Vue.use(Vuelidate)
+Vue.use(VueReCaptcha, {
+  siteKey: process.env.VUE_APP_RECAPTCHA_V3_KEY,
+})
 Vue.config.productionTip = false
 
 new Vue({
