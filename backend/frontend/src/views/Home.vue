@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    
+ <!--   
     <v-navigation-drawer
       v-model="drawer"
       app
@@ -41,7 +41,7 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>Todo app</v-toolbar-title>
     </v-app-bar>
-    
+   --> 
     <v-content>
       <v-container
         class="fill-height"
@@ -57,11 +57,11 @@
         </v-row>
       </v-container>
     </v-content>
-
+<!--
     <v-footer app>
       <span>&copy; 2020</span>
     </v-footer>
-    
+    -->
   </v-app>
 </template>
 
