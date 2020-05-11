@@ -95,7 +95,7 @@ export default {
       this.$recaptcha("login").then(token => {
         this.recaptchaValidate(token);
       });
-      return this.getCaptcha().success;
+      return this.getCaptcha();
     }
   },
   validations: {
