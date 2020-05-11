@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from todo import views
+from apps.todo import views
 
 urlpatterns = [
     path('api/', views.api_root),
