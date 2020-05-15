@@ -69,11 +69,11 @@ export default {
       if (this.$v.$invalid) {
         return;
       } else {
-        if (!this.recaptcha()) {
-          alert("Captcha failed");
-          return
-        }
-        alert("Captcha success");
+        if (!this.recaptcha()) 
+          {
+            alert("You are a robot!")
+            return
+          }
         router.push({ name: 'Home'})
       }
     },

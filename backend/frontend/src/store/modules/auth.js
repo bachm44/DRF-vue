@@ -12,8 +12,9 @@ const getters = {
 
 const actions = {
     async recaptchaValidate({ commit }, token) {
+        token = {"token": token}
         const response = await axios.post((API_URL + 'recaptcha/'), token)
-        commit('setRecaptcha', response)
+        commit('setRecaptcha', response.data)
     }
 }
 
