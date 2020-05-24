@@ -20,4 +20,6 @@ urlpatterns = [
     path('', include('apps.todo.urls')),
     path('', include('apps.auth.urls')),
     path('admin/', admin.site.urls),
+    
+    path(r'api/auth/', include('djoser.urls')),
 ]

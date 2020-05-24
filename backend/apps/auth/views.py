@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 import os
 import urllib
@@ -45,9 +46,6 @@ class ReCaptchaValidate(APIView):
             req = urllib.request.Request(url, data=data)
             response = urllib.request.urlopen(req)
             result = json.loads(response.read().decode())
-
-            #print(colored(result, 'green'))
-        
+            print(colored(result['score'], 'red'))
         return Response(result['score'] > 0.3)
-
 

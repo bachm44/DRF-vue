@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'apps.todo.apps.TodoConfig',
     'apps.auth.apps.AuthConfig',
+    'djoser',
 ]
 
 MIDDLEWARE = [
