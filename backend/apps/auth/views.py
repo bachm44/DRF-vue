@@ -2,18 +2,25 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import IsAuthenticated
+from .models import userProfile
+from .permissions import IsOwnerProfileOrReadOnly
+from .serializers import userProfileSerializer
 
 import os
 import urllib
 import json
 from termcolor import colored
 
+
 def pretty_request(request):
     headers = ''
     for header, value in request.META.items():
         if not header.startswith('HTTP'):
             continue
-        header = '-'.join([h.capitalize() for h in header[5:].lower().split('_')])
+        header = '-'.join([h.capitalize()
+                           for h in header[5:].lower().split('_')])
         headers += '{}: {}\n'.format(header, value)
 
     return (
@@ -28,7 +35,7 @@ def pretty_request(request):
         content_type=request.META['CONTENT_TYPE'],
         headers=headers,
         body=request.body,
-    )    
+    )
 
 
 class ReCaptchaValidate(APIView):
@@ -41,7 +48,7 @@ class ReCaptchaValidate(APIView):
                 'secret': secret_key,
                 'response': recaptcha_response
             }
-            
+
             data = urllib.parse.urlencode(data).encode()
             req = urllib.request.Request(url, data=data)
             response = urllib.request.urlopen(req)
@@ -49,3 +56,18 @@ class ReCaptchaValidate(APIView):
             print(colored(result['score'], 'red'))
         return Response(result['score'] > 0.3)
 
+
+class UserProfileListCreateView(ListCreateAPIView):
+    queryset = userProfile.objects.all()
+    serializer_class = userProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        user = self.request.user
+        serializer.save(user=user)
+
+
+class UserProfileDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = userProfile.objects.all()
+    serializer_class = userProfileSerializer
+    permission_classes = [IsOwnerProfileOrReadOnly, IsAuthenticated]

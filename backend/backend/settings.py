@@ -10,7 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
+from pathlib import Path  # python3 only
 import os
+from datetime import timedelta
 
 
 from dotenv import load_dotenv
@@ -20,7 +22,6 @@ load_dotenv()
 load_dotenv(verbose=True)
 
 # OR, explicitly providing path to '.env'
-from pathlib import Path  # python3 only
 env_path = Path('.') / '.env'
 load_dotenv(dotenv_path=env_path)
 
@@ -57,6 +58,8 @@ INSTALLED_APPS = [
     'apps.todo.apps.TodoConfig',
     'apps.auth.apps.AuthConfig',
     'djoser',
+    'rest_framework_simplejwt',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
@@ -150,6 +153,16 @@ CORS_ORIGIN_WHITELIST = (
 '''
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 100
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    # 'PAGE_SIZE': 100,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
+
+SIMPLE_JWT = {
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_EXPIRATION_DELTA': timedelta(hours=1),
+    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),
 }
