@@ -41,7 +41,7 @@ RECAPTCHA_SECRET_KEY = os.getenv('RECAPTCHA_V3_SECRET')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition

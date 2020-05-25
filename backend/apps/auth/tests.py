@@ -14,7 +14,7 @@ class RegistrationTestCase(APITestCase):
         data = {
             "username": "mario", "password": "sdfvfdgfgdsdffdssdf", "email": "test@test.est"}
 
-        response = self.client.post('/auth/users/', data)
+        response = self.client.post('/api/auth/users/', data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
@@ -23,9 +23,9 @@ class userProfileTestCase(APITestCase):
 
     def setUp(self):
         self.user = self.client.post(
-            '/auth/users/', data={"username": "mario", "password": "sdfvfdgfgdsdffdssdf", "email": "test@test.est"})
+            '/api/auth/users/', data={"username": "mario", "password": "sdfvfdgfgdsdffdssdf", "email": "test@test.est"})
         response = self.client.post(
-            '/auth/jwt/create/', data={"username": "mario", "password": "sdfvfdgfgdsdffdssdf"})
+            '/api/auth/jwt/create/', data={"username": "mario", "password": "sdfvfdgfgdsdffdssdf"})
 
         self.token = response.data['access']
         self.api_authentication()
