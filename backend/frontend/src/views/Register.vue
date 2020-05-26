@@ -20,6 +20,16 @@
                 @input="$v.user.username.$touch()"
               ></v-text-field>
               <v-text-field
+                label="Email"
+                name="email"
+                type="text"
+                class="form__input"
+                v-model.trim="$v.user.email.$model"
+                :error-messages="emailErrors"
+                required
+                @input="$v.user.email.$touch()"
+              ></v-text-field>
+              <v-text-field
                 :append-icon="showP1 ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="showP1 ? 'text' : 'password'"
                 @click:append="showP1 = !showP1"
@@ -49,7 +59,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn id="button" color="green" @click="onRegister">Register</v-btn>
+            <v-btn id="button" color="green" @click="register">Register</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -58,9 +68,9 @@
 </template>
 
 <script>
-import { required, sameAs, minLength } from "vuelidate/lib/validators";
-import { mapGetters, mapActions } from "vuex"
-import router from '../router/index.js'
+import { required, sameAs, minLength, email } from "vuelidate/lib/validators";
+import { mapGetters, mapActions } from "vuex";
+import router from "../router/index.js";
 
 export default {
   name: "Register",
@@ -69,15 +79,17 @@ export default {
     user: {
       username: "",
       password: "",
+      email: "",
       repeatedPass: ""
     },
     showP1: false,
-    showP2: false
+    showP2: false,
+    error: false
   }),
   methods: {
     ...mapGetters(["getCaptcha"]),
     ...mapActions(["recaptchaValidate"]),
-    onRegister(e) {
+    register(e) {
       this.submitted = true;
       this.$v.$touch();
       if (this.$v.$invalid) {
@@ -85,22 +97,37 @@ export default {
       } else {
         if (!this.recaptcha()) {
           alert("Captcha failed");
-          return
+          return;
         }
-        alert("Captcha success");
-        router.push({ name: 'Home'})
+        this.$store
+          .dispatch("onRegister", {
+            username: this.user.username,
+            password: this.user.password,
+            email: this.user.email
+          })
+          .then(success => {
+            this.$router.push("/login");
+          })
+          .catch(error => {
+            if (error.password !== null) console.log(error.password);
+            if (error.email !== null) console.log(error.email);
+            if (error.username !== null) console.log(error.username);
+
+            this.error = true;
+          });
       }
     },
     recaptcha() {
       this.$recaptcha("login").then(token => {
         this.recaptchaValidate(token);
       });
-      return this.getCaptcha();
+      return true; // this.getCaptcha();
     }
   },
   validations: {
     user: {
       username: { required },
+      email: { required, email },
       password: { required, minLength: minLength(6) },
       repeatedPass: { required, sameAsPassword: sameAs("password") }
     }
@@ -110,6 +137,13 @@ export default {
       const errors = [];
       if (!this.$v.user.username.$dirty) return errors;
       !this.$v.user.username.required && errors.push("Username is required");
+      return errors;
+    },
+    emailErrors() {
+      const errors = [];
+      if (!this.$v.user.email.$dirty) return errors;
+      !this.$v.user.email.required && errors.push("Username is required");
+      !this.$v.user.email.email && errors.push("Wrong email format");
       return errors;
     },
     passwordErrors() {

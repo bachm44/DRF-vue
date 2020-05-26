@@ -7,7 +7,7 @@ const state = {
 }
 
 const getters = {
-    allTodos: (state) => state.todos
+    allTodos: (state) => JSON.parse(JSON.stringify(state.todos))
 }
 
 const actions = {

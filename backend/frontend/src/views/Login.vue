@@ -7,6 +7,11 @@
             <v-toolbar-title>Login</v-toolbar-title>
             <v-spacer></v-spacer>
           </v-toolbar>
+          <v-alert
+            color="error"
+            :value="error"
+            icon="close"
+          >The username or the password are incorrect</v-alert>
           <v-card-text>
             <v-form>
               <v-text-field
@@ -36,7 +41,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn id="button" color="primary" @click="onLogin">Login</v-btn>
+            <v-btn id="button" color="primary" @click="login">Login</v-btn>
             <router-link to="/register">
               <v-btn color="green">Register</v-btn>
             </router-link>
@@ -49,8 +54,8 @@
 
 <script>
 import { required } from "vuelidate/lib/validators";
-import { mapGetters, mapActions } from "vuex"
-import router from '../router/index.js'
+import { mapGetters, mapActions } from "vuex";
+import router from "../router/index.js";
 
 export default {
   name: "Login",
@@ -58,30 +63,41 @@ export default {
     submitted: false,
     username: "",
     password: "",
-    showP1: false
+    showP1: false,
+    error: false
   }),
   methods: {
     ...mapGetters(["getCaptcha"]),
     ...mapActions(["recaptchaValidate"]),
-    onLogin(e) {
+    login(e) {
       this.submitted = true;
       this.$v.$touch();
       if (this.$v.$invalid) {
         return;
       } else {
-        if (!this.recaptcha()) 
-          {
-            alert("You are a robot!")
-            return
-          }
-        router.push({ name: 'Home'})
+        if (!this.recaptcha()) {
+          alert("You are a robot!");
+          return;
+        }
+        this.$store
+          .dispatch("onLogin", {
+            username: this.username,
+            password: this.password
+          })
+          .then(success => {
+            this.$router.push("/");
+          })
+          .catch(error => {
+            this.error = true;
+          });
       }
     },
+
     recaptcha() {
       this.$recaptcha("login").then(token => {
         this.recaptchaValidate(token);
       });
-      return this.getCaptcha();
+      return true; //this.getCaptcha();
     }
   },
   validations: {
