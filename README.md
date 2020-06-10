@@ -3,7 +3,7 @@
 ## Functionality
 
 * basic CRUD operations
-* user management and authentication (available soon)
+* reCAPTCHA v3 support
 
 ## Technologies
 
